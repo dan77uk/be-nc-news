@@ -1,3 +1,4 @@
 node_modules
 .env.*
 originalReadMe.md
+test.sql
