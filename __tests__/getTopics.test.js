@@ -26,4 +26,13 @@ describe("GET /api/topics", () => {
         });
       });
   });
+
+  it("should return an error for a broken path", () => {
+    return request(app)
+      .get("/api/topicz")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Not Found");
+      });
+  });
 });
