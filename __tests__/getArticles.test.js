@@ -51,4 +51,13 @@ describe("GET /api/topics", () => {
         });
       });
   });
+
+  it("should return a 404 error for a broken path", () => {
+    return request(app)
+      .get("/api/articlez")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Not Found");
+      });
+  });
 });
