@@ -21,6 +21,32 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 
+  it("should return an array of comments, each with correct fields", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        body.comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          });
+        });
+      });
+  });
+
+  it("should return 404 status error if no article matches id", () => {
+    return request(app)
+      .get("/api/articles/993/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+
   it("should return a 400 error if passed an invalid id", () => {
     return request(app)
       .get("/api/articles/dog/comments")
