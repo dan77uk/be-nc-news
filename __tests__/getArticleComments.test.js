@@ -69,12 +69,12 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 
-  it("should if article_id has no comments", () => {
+  it("should return an empty array if valid article_id has no comments", () => {
     return request(app)
       .get("/api/articles/2/comments")
-      .expect(404)
+      .expect(200)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not found");
+        expect(body.comments).toHaveLength(0);
       });
   });
 });
