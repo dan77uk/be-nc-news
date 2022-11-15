@@ -28,6 +28,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         body.comments.forEach((comment) => {
           expect(comment).toMatchObject({
+            article_id: 1,
             comment_id: expect.any(Number),
             author: expect.any(String),
             body: expect.any(String),
@@ -55,7 +56,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/993/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not found");
+        expect(body.msg).toBe("Article not found");
       });
   });
 
