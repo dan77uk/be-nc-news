@@ -28,4 +28,13 @@ describe("GET /api/articles/:article_id", () => {
         });
       });
   });
+
+  it("should return 204 status error if no article matches id", () => {
+    return request(app)
+      .get("/api/articles/993")
+      .expect(204)
+      .then(({ res }) => {
+        expect(res.statusMessage).toBe("No Content");
+      });
+  });
 });
