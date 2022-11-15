@@ -20,4 +20,13 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(body.comments).toHaveLength(11);
       });
   });
+
+  it("should return a 400 error if passed an invalid id", () => {
+    return request(app)
+      .get("/api/articles/dog/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid article id");
+      });
+  });
 });
