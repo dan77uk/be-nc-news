@@ -13,18 +13,21 @@ exports.selectArticles = () => {
         const queryStr = `UPDATE articles SET comment_count = $1 WHERE article_id = $2`;
         return db.query(queryStr, [count, article_id]);
       });
-      return Promise.all(update).then(() => {
-        return db
-          .query(`SELECT * FROM articles ORDER BY created_at DESC;`)
-          .then((result) => {
-            if (result.rows.length === 0) {
-              return Promise.reject({
-                status: 204,
-                msg: "No Content",
-              });
-            }
-            return result.rows;
-          });
-      });
+      return update;
+    })
+    .then((result) => {
+      return Promise.all(result);
+    })
+    .then((result) => {
+      return db.query(`SELECT * FROM articles ORDER BY created_at DESC;`);
+    })
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({
+          status: 204,
+          msg: "No Content",
+        });
+      }
+      return result.rows;
     });
 };
