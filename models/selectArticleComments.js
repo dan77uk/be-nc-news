@@ -9,7 +9,7 @@ exports.selectArticleComments = (article_id) => {
   }
   return db
     .query(
-      "SELECT comment_id, votes, created_at, author, body FROM comments where article_id = $1",
+      "SELECT comment_id, votes, created_at, author, body FROM comments where article_id = $1 ORDER BY created_at DESC",
       [article_id]
     )
     .then((result) => {

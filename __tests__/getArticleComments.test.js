@@ -38,6 +38,18 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 
+  it("should be served with most recent comments first", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toBeSorted({
+          key: "created_at",
+          descending: true,
+        });
+      });
+  });
+
   it("should return 404 status error if no article matches id", () => {
     return request(app)
       .get("/api/articles/993/comments")
