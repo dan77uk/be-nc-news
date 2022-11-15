@@ -29,12 +29,21 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 
-  it("should return 204 status error if no article matches id", () => {
+  it("should return 404 status error if no article matches id", () => {
     return request(app)
       .get("/api/articles/993")
-      .expect(204)
-      .then(({ res }) => {
-        expect(res.statusMessage).toBe("No Content");
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+
+  it("should return 400 status error if id is invalid", () => {
+    return request(app)
+      .get("/api/articles/dog")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid article id");
       });
   });
 });
