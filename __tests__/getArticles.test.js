@@ -11,7 +11,7 @@ afterAll(() => {
   return db.end();
 });
 
-describe("GET /api/topics", () => {
+describe("GET /api/articles", () => {
   it("should return an array of articles", () => {
     return request(app)
       .get("/api/articles")
