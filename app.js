@@ -6,6 +6,7 @@ const {
   getArticleComments,
   getArticleById,
   postComment,
+  patchArticleVotes,
 } = require("./controllers/controllers");
 const { handle404Error } = require("./errors/index");
 app.use(express.json());
@@ -14,6 +15,7 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getArticleComments);
 app.get("/api/articles/:article_id", getArticleById);
 app.post("/api/articles/:article_id/comments", postComment);
+app.patch("/api/articles/:article_id", patchArticleVotes);
 
 app.all("*", handle404Error);
 

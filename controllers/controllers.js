@@ -3,6 +3,7 @@ const { selectArticles } = require("../models/selectArticles");
 const { selectArticleComments } = require("../models/selectArticleComments");
 const { selectArticleById } = require("../models/selectArticleById");
 const { insertComment } = require("../models/insertComment");
+const { updateArticleVotes } = require("../models/updateArticleVotes");
 
 exports.getTopics = (req, res, next) => {
   selectTopics()
@@ -43,6 +44,15 @@ exports.postComment = (req, res, next) => {
   insertComment(article_id, req.body)
     .then((result) => {
       res.status(201).send({ comment: result });
+    })
+    .catch(next);
+};
+
+exports.patchArticleVotes = (req, res, next) => {
+  const { article_id } = req.params;
+  updateArticleVotes(article_id, req.body)
+    .then((result) => {
+      res.status(201).send({ article: result });
     })
     .catch(next);
 };
