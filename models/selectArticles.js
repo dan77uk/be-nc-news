@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-exports.selectArticles = () => {
+exports.selectArticles = (sort_by = "created_at", order = "DESC", topic) => {
   return db
     .query("ALTER TABLE articles ADD COLUMN comment_count INT DEFAULT 0;")
     .then(() => {
@@ -18,8 +18,40 @@ exports.selectArticles = () => {
     .then((result) => {
       return Promise.all(result);
     })
-    .then((result) => {
-      return db.query(`SELECT * FROM articles ORDER BY created_at DESC;`);
+    .then(() => {
+      // Validate any passed sort_by query
+      const validSortColumns = [
+        "created_at",
+        "title",
+        "article_id",
+        "topic",
+        "votes",
+        "author",
+        "comment_count",
+      ];
+      if (!validSortColumns.includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: "invalid sort query" });
+      }
+
+      // Validate any order query
+      const validOrderQuery = ["asc", "ASC", "desc", "DESC"];
+      if (!validOrderQuery.includes(order)) {
+        return Promise.reject({
+          status: 400,
+          msg: "Invalid order query",
+        });
+      }
+      let queryStr = "SELECT * FROM articles";
+
+      const topicValue = [];
+      if (topic) {
+        queryStr += ` where topic = $1`;
+        topicValue.push(topic);
+      }
+
+      queryStr += ` ORDER BY ${sort_by} ${order};`;
+
+      return db.query(queryStr, topicValue);
     })
     .then((result) => {
       if (result.rows.length === 0) {
