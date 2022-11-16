@@ -2,6 +2,7 @@ const { selectTopics } = require("../models/selectTopics");
 const { selectArticles } = require("../models/selectArticles");
 const { selectArticleComments } = require("../models/selectArticleComments");
 const { selectArticleById } = require("../models/selectArticleById");
+const { insertComment } = require("../models/insertComment");
 
 exports.getTopics = (req, res, next) => {
   selectTopics()
@@ -33,6 +34,15 @@ exports.getArticleById = (req, res, next) => {
   selectArticleById(article_id)
     .then((result) => {
       res.status(200).send({ article: result });
+    })
+    .catch(next);
+};
+
+exports.postComment = (req, res, next) => {
+  const { article_id } = req.params;
+  insertComment(article_id, req.body)
+    .then((result) => {
+      res.status(201).send({ comment: result });
     })
     .catch(next);
 };
