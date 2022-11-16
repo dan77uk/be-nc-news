@@ -20,7 +20,6 @@ describe("PATCH /api/articles/:article_id", () => {
       })
       .expect(201)
       .then(({ body }) => {
-        console.log(body.article);
         expect(body.article).toMatchObject({
           article_id: 3,
           title: "Eight pug gifs that remind me of mitch",
