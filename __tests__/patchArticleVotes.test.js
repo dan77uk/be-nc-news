@@ -14,30 +14,42 @@ afterAll(() => {
 describe("PATCH /api/articles/:article_id", () => {
   it("should return an object of corresponding article_id with vote property updated", () => {
     return request(app)
-      .patch("/api/articles/1")
+      .patch("/api/articles/3")
       .send({
         inc_votes: 32,
       })
       .expect(201)
       .then(({ body }) => {
+        console.log(body.article);
         expect(body.article).toMatchObject({
-          article_id: 1,
-          title: expect.any(String),
-          topic: expect.any(String),
-          author: expect.any(String),
-          body: expect.any(String),
-          created_at: expect.any(String),
-          votes: expect.any(Number),
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          votes: 32,
         });
       });
   });
 
-  it("should return a 400 error if missing inc_votes property in body", () => {
+  it("should return a 400 error if incorrect 'inc_votes' property in body", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({
+        monkey_tennis: 32,
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid inc_votes key or value");
+      });
+  });
+
+  it("should return a 400 error if votes key is invalid", () => {
     return request(app)
       .patch("/api/articles/1")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Missing required field: votes");
+        expect(body.msg).toBe("Invalid inc_votes key or value");
       });
   });
 
