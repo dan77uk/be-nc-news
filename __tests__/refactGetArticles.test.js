@@ -97,7 +97,21 @@ describe("GET /api/articles", () => {
       });
   });
 
-  it("should return a 204 error if passed topic query that does not exist", () => {
-    return request(app).get("/api/articles?topic=dog").expect(204);
+  it("should return a 404 error if passed topic query that does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=dog")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No such topic");
+      });
+  });
+
+  it("should return a 200 status when a topic exists, but has no related articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(0);
+      });
   });
 });
