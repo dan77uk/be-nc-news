@@ -6,6 +6,7 @@ const { insertComment } = require("../models/insertComment");
 const { updateArticleVotes } = require("../models/updateArticleVotes");
 const { selectUsers } = require("../models/selectUsers");
 const { deleteCommentById } = require("../models/deleteCommentById");
+const { readEndpoints } = require("../models/readEndpoints");
 
 exports.getTopics = (req, res, next) => {
   selectTopics()
@@ -73,4 +74,12 @@ exports.deleteComment = (req, res, next) => {
   deleteCommentById(comment_id).then((result) => {
     res.status(204).send();
   });
+};
+
+exports.getEndpoints = (req, res, next) => {
+  readEndpoints()
+    .then((result) => {
+      res.status(200).send({ endpoints: result });
+    })
+    .catch(next);
 };
