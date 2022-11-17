@@ -5,6 +5,7 @@ const { selectArticleById } = require("../models/selectArticleById");
 const { insertComment } = require("../models/insertComment");
 const { updateArticleVotes } = require("../models/updateArticleVotes");
 const { selectUsers } = require("../models/selectUsers");
+const { deleteCommentById } = require("../models/deleteCommentById");
 
 exports.getTopics = (req, res, next) => {
   selectTopics()
@@ -65,4 +66,11 @@ exports.getUsers = (req, res, next) => {
       res.status(200).send({ users: result });
     })
     .catch(next);
+};
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  deleteCommentById(comment_id).then((result) => {
+    res.status(204).send();
+  });
 };
