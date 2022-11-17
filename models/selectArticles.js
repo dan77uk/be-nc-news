@@ -1,33 +1,50 @@
 const db = require("../db/connection");
+const { checkTopicExists } = require("../utils/checkTopicExists");
 
-exports.selectArticles = () => {
-  return db
-    .query("ALTER TABLE articles ADD COLUMN comment_count INT DEFAULT 0;")
-    .then(() => {
-      return db.query(
-        "SELECT article_id, COUNT(article_id)::INT as count FROM comments GROUP BY article_id;"
-      );
-    })
-    .then(({ rows }) => {
-      const update = rows.map(({ article_id, count }) => {
-        const queryStr = `UPDATE articles SET comment_count = $1 WHERE article_id = $2`;
-        return db.query(queryStr, [count, article_id]);
-      });
-      return update;
-    })
-    .then((result) => {
-      return Promise.all(result);
-    })
-    .then((result) => {
-      return db.query(`SELECT * FROM articles ORDER BY created_at DESC;`);
-    })
-    .then((result) => {
-      if (result.rows.length === 0) {
-        return Promise.reject({
-          status: 204,
-          msg: "No Content",
-        });
-      }
-      return result.rows;
+exports.selectArticles = (sort_by = "created_at", order = "DESC", topic) => {
+  const validSortColumns = [
+    "created_at",
+    "title",
+    "article_id",
+    "topic",
+    "votes",
+    "author",
+    "comment_count",
+  ];
+  const promiseArray = [];
+
+  if (!validSortColumns.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "invalid sort query" });
+  }
+
+  // Validate any order query
+  const validOrderQuery = ["asc", "ASC", "desc", "DESC"];
+  if (!validOrderQuery.includes(order)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid order query",
     });
+  }
+
+  let queryStr =
+    "SELECT articles.*, COUNT(comments.comment_id)::INT as comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id";
+
+  const topicValue = [];
+  if (topic) {
+    promiseArray.push(checkTopicExists(topic));
+    topicValue.push(topic);
+    queryStr += ` WHERE articles.topic = $1`;
+  }
+
+  queryStr += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`;
+
+  promiseArray.push(db.query(queryStr, topicValue));
+
+  return Promise.all(promiseArray).then((result) => {
+    if (result[1] === undefined) {
+      return result[0].rows;
+    } else {
+      return result[1].rows;
+    }
+  });
 };
