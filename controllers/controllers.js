@@ -71,6 +71,6 @@ exports.getUsers = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
   deleteCommentById(comment_id).then((result) => {
-    res.status(204).send({ deleted: result });
+    res.status(204).send();
   });
 };
