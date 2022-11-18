@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const apiRouter = require("./routes/api-router");
-const { deleteComment } = require("./controllers/controllers");
 const { handle404Error } = require("./errors/index");
 app.use(express.json());
 
@@ -10,8 +9,6 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api", apiRouter);
-
-app.delete("/api/comments/:comment_id", deleteComment);
 
 app.all("*", handle404Error);
 
