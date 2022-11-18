@@ -13,6 +13,10 @@ const {
 } = require("./controllers/controllers");
 const { handle404Error } = require("./errors/index");
 app.use(express.json());
+
+app.get("/api/health", (req, res) => {
+  res.status(200).send({ msg: "server up and running" });
+});
 app.get("/api", getEndpoints);
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
