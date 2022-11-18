@@ -12,7 +12,7 @@ afterAll(() => {
 });
 
 describe("GET /api/users", () => {
-  it("should rturn an array of user objects", () => {
+  it("should return an array of user objects", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
