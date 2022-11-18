@@ -65,6 +65,18 @@
      ]
     }
   },
+  "GET /api/users/:username": {
+    "description": "returns a single user",
+    "exampleResponse": {
+      "user": [
+        {
+        "username": "deadpool",
+        "name": "wade",
+        "avatar_url": "A link to an image"
+        }
+     ]
+    }
+  },
   "PATCH /api/articles/:article_id": {
     "description": "accepts a vote_inc property in body and returns an article object with vote property updated",
     "exampleResponse": {

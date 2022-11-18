@@ -7,6 +7,7 @@ const { updateArticleVotes } = require("../models/updateArticleVotes");
 const { selectUsers } = require("../models/selectUsers");
 const { deleteCommentById } = require("../models/deleteCommentById");
 const { readEndpoints } = require("../models/readEndpoints");
+const { selectUserById } = require("../models/selectUserById");
 
 exports.getTopics = (req, res, next) => {
   selectTopics()
@@ -80,6 +81,15 @@ exports.getEndpoints = (req, res, next) => {
   readEndpoints()
     .then((result) => {
       res.status(200).send({ endpoints: result });
+    })
+    .catch(next);
+};
+
+exports.getUserByUsername = (req, res, next) => {
+  const { username } = req.params;
+  selectUserById(username)
+    .then((result) => {
+      res.status(200).send({ user: result });
     })
     .catch(next);
 };
