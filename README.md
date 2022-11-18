@@ -13,37 +13,17 @@ All available endpoints and their responses are listed [here](https://dp-api.cyc
 
 ### INITIAL SET UP
 
+Please ensure you have **node v19.1.0** and **PSQL v 14.5** installed as the minimum required versions for this repository.
+
 In order to use this repository, please follow the steps below:
 
 1.  Clone this repository to your own machine.
-2.  Create a new public GitHub repository, and do not initialise the project with a readme, .gitignore or license.
-3.  From your local copy of your repository, push your code to your new respository using the following commands:
 
-    - git remote set-url origin YOUR_NEW_REPO_URL_HERE
-    - git branch -M main
-    - git push -u origin main
-
-4.  Run 'npm install' to install all required production and development dependencies. These are as follows:
-
-        "devDependencies": {
-            "husky": "^7.0.0",
-            "jest": "^27.5.1",
-            "jest-extended": "^2.0.0",
-            "jest-sorted": "^1.0.14",
-            "pg-format": "^1.0.4",
-            "supertest": "^6.3.1"
-        },
-        "dependencies": {
-            "dotenv": "^16.0.0",
-            "express": "^4.18.2",
-            "pg": "^8.7.3"
-        }
-
-5.  Create a .env file called **.env.development** with the following code:
+2.  Create a .env file called **.env.development** with the following code:
 
 - PGDATABASE=nc_news
 
-6. Create a .env file called **.env.test** with the following code:
+3. Create a .env file called **.env.test** with the following code:
 
 - PGDATABASE=nc_news_test
 
