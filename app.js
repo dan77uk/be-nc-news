@@ -1,30 +1,16 @@
 const express = require("express");
 const app = express();
-const {
-  getTopics,
-  getArticles,
-  getArticleComments,
-  getArticleById,
-  postComment,
-  patchArticleVotes,
-  getUsers,
-  deleteComment,
-  getEndpoints,
-} = require("./controllers/controllers");
+const apiRouter = require("./routes/api-router");
+const { deleteComment } = require("./controllers/controllers");
 const { handle404Error } = require("./errors/index");
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {
   res.status(200).send({ msg: "server up and running" });
 });
-app.get("/api", getEndpoints);
-app.get("/api/topics", getTopics);
-app.get("/api/articles", getArticles);
-app.get("/api/articles/:article_id/comments", getArticleComments);
-app.get("/api/articles/:article_id", getArticleById);
-app.post("/api/articles/:article_id/comments", postComment);
-app.patch("/api/articles/:article_id", patchArticleVotes);
-app.get("/api/users", getUsers);
+
+app.use("/api", apiRouter);
+
 app.delete("/api/comments/:comment_id", deleteComment);
 
 app.all("*", handle404Error);
