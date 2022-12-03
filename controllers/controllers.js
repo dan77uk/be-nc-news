@@ -11,6 +11,7 @@ const { selectUserById } = require("../models/selectUserById");
 const { updateComment } = require("../models/updateComment");
 const { insertArticle } = require("../models/insertArticle");
 const { insertTopic } = require("../models/insertTopic");
+const { deleteArticleById } = require("../models/deleteArticleById");
 
 exports.getTopics = (req, res, next) => {
   selectTopics()
@@ -76,9 +77,11 @@ exports.getUsers = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
-  deleteCommentById(comment_id).then((result) => {
-    res.status(204).send();
-  });
+  deleteCommentById(comment_id)
+    .then((result) => {
+      res.status(204).send();
+    })
+    .catch(next);
 };
 
 exports.getEndpoints = (req, res, next) => {
@@ -120,6 +123,15 @@ exports.postTopic = (req, res, next) => {
   insertTopic(req.body)
     .then((result) => {
       [res.status(201).send({ topic: result })];
+    })
+    .catch(next);
+};
+
+exports.deleteArticle = (req, res, next) => {
+  const { article_id } = req.params;
+  deleteArticleById(article_id)
+    .then((result) => {
+      res.status(204).send();
     })
     .catch(next);
 };

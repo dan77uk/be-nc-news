@@ -11,7 +11,7 @@ afterAll(() => {
   return db.end();
 });
 
-describe("GET /api/articles/:article_id/comments", () => {
+describe("POST /api/topics", () => {
   it("should return and object on key of topic", () => {
     return request(app)
       .post("/api/topics")
