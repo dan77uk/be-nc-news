@@ -17,7 +17,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toHaveLength(12);
+        expect(body.articles).toHaveLength(10);
       });
   });
 
@@ -58,6 +58,69 @@ describe("GET /api/articles", () => {
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("Not Found");
+      });
+  });
+
+  it("should return a total_count property containing number of articles returned", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.total_count).toBe(10);
+      });
+  });
+
+  it("should return a total_count property with number of articles equal to num given in 'limit' query", () => {
+    return request(app)
+      .get("/api/articles?limit=7")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.total_count).toBe(7);
+      });
+  });
+
+  it("should return a total_count property of 2 when passed a p query value of 2", () => {
+    return request(app)
+      .get("/api/articles?p=2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.total_count).toBe(2);
+      });
+  });
+
+  it("should return a total_count property of 6 when passed a P query value of 2 with a LIMIT query value of 6", () => {
+    return request(app)
+      .get("/api/articles?limit=6&p=2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.total_count).toBe(6);
+      });
+  });
+
+  it("should ignore P query if passed anything other than a digit", () => {
+    return request(app)
+      .get("/api/articles?p=dog")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.total_count).toBe(10);
+      });
+  });
+
+  it("should return an empty array if P query is out of available offset range", () => {
+    return request(app)
+      .get("/api/articles?p=5")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.total_count).toBe(0);
+      });
+  });
+
+  it("should return default LIMIT amount if passed anything other than digits on a LIMIT query", () => {
+    return request(app)
+      .get("/api/articles?limit=dog")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.total_count).toBe(10);
       });
   });
 });

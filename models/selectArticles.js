@@ -1,7 +1,13 @@
 const db = require("../db/connection");
 const { checkTopicExists } = require("../utils/checkTopicExists");
 
-exports.selectArticles = (sort_by = "created_at", order = "DESC", topic) => {
+exports.selectArticles = (
+  sort_by = "created_at",
+  order = "DESC",
+  topic,
+  limit,
+  p
+) => {
   const validSortColumns = [
     "created_at",
     "title",
@@ -11,6 +17,13 @@ exports.selectArticles = (sort_by = "created_at", order = "DESC", topic) => {
     "author",
     "comment_count",
   ];
+
+  const regexNumCheck = /^\d+$/g;
+
+  if (!regexNumCheck.test(limit)) {
+    limit = 10;
+  }
+
   const promiseArray = [];
 
   if (!validSortColumns.includes(sort_by)) {
@@ -36,7 +49,16 @@ exports.selectArticles = (sort_by = "created_at", order = "DESC", topic) => {
     queryStr += ` WHERE articles.topic = $1`;
   }
 
-  queryStr += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`;
+  queryStr += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order} LIMIT ${limit}`;
+
+  if (p) {
+    if (regexNumCheck.test(p)) {
+      const offset = limit * (p - 1);
+      queryStr += ` OFFSET ${offset}`;
+    }
+  }
+
+  queryStr += ";";
 
   promiseArray.push(db.query(queryStr, topicValue));
 
