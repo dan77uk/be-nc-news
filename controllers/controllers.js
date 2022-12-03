@@ -10,6 +10,7 @@ const { readEndpoints } = require("../models/readEndpoints");
 const { selectUserById } = require("../models/selectUserById");
 const { updateComment } = require("../models/updateComment");
 const { insertArticle } = require("../models/insertArticle");
+const { insertTopic } = require("../models/insertTopic");
 
 exports.getTopics = (req, res, next) => {
   selectTopics()
@@ -111,6 +112,14 @@ exports.postArticle = (req, res, next) => {
   insertArticle(req.body)
     .then((result) => {
       res.status(201).send({ article: result });
+    })
+    .catch(next);
+};
+
+exports.postTopic = (req, res, next) => {
+  insertTopic(req.body)
+    .then((result) => {
+      [res.status(201).send({ topic: result })];
     })
     .catch(next);
 };
