@@ -17,7 +17,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-        expect(body.comments).toHaveLength(11);
+        expect(body.comments).toHaveLength(10);
       });
   });
 
@@ -75,6 +75,42 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.comments).toHaveLength(0);
+      });
+  });
+
+  it("should return an array of n comments when passed n as a LIMIT query", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=3")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toHaveLength(3);
+      });
+  });
+
+  it("should return an array of comments when passed a P(age) query", () => {
+    return request(app)
+      .get("/api/articles/1/comments?p=2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toHaveLength(1);
+      });
+  });
+
+  it("should return an array of length 5 when passed a P(age) query of 2 with a LIMIT query of 5", () => {
+    return request(app)
+      .get("/api/articles/1/comments?p=2&limit=5")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toHaveLength(5);
+      });
+  });
+
+  it("should return an array of length 1 when passed a P(age) query of 3 with a LIMIT query of 5", () => {
+    return request(app)
+      .get("/api/articles/1/comments?p=3&limit=5")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toHaveLength(1);
       });
   });
 });
