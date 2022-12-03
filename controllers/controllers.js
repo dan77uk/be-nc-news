@@ -30,7 +30,8 @@ exports.getArticles = (req, res, next) => {
 
 exports.getArticleComments = (req, res, next) => {
   const { article_id } = req.params;
-  selectArticleComments(article_id)
+  const { limit, p } = req.query;
+  selectArticleComments(article_id, limit, p)
     .then((result) => {
       res.status(200).send({ comments: result });
     })
