@@ -88,7 +88,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?topic=mitch")
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toHaveLength(11);
+        expect(body.articles).toHaveLength(10);
         body.articles.forEach((article) => {
           expect(article).toMatchObject({
             topic: "mitch",
