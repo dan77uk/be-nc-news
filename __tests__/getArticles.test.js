@@ -66,7 +66,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        expect(body.total_count).toBe(10);
+        expect(body.total_count).toBe(12);
       });
   });
 
@@ -75,7 +75,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?limit=7")
       .expect(200)
       .then(({ body }) => {
-        expect(body.total_count).toBe(7);
+        expect(body.articles.length).toBe(7);
       });
   });
 
@@ -84,7 +84,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?p=2")
       .expect(200)
       .then(({ body }) => {
-        expect(body.total_count).toBe(2);
+        expect(body.articles).toHaveLength(2);
       });
   });
 
@@ -93,7 +93,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?limit=6&p=2")
       .expect(200)
       .then(({ body }) => {
-        expect(body.total_count).toBe(6);
+        expect(body.articles).toHaveLength(6);
       });
   });
 
@@ -102,7 +102,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?p=dog")
       .expect(200)
       .then(({ body }) => {
-        expect(body.total_count).toBe(10);
+        expect(body.total_count).toBe(12);
       });
   });
 
@@ -111,7 +111,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?p=5")
       .expect(200)
       .then(({ body }) => {
-        expect(body.total_count).toBe(0);
+        expect(body.articles).toHaveLength(0);
       });
   });
 
@@ -120,7 +120,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?limit=dog")
       .expect(200)
       .then(({ body }) => {
-        expect(body.total_count).toBe(10);
+        expect(body.articles).toHaveLength(10);
       });
   });
 });

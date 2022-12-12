@@ -97,9 +97,9 @@ describe("GET /api/articles", () => {
       });
   });
 
-  it("should return a 404 error if passed topic query that does not exist", () => {
+  it("should return a 404 error if passed a topic query that does not exist", () => {
     return request(app)
-      .get("/api/articles?topic=dog")
+      .get("/api/articles?topic=pensofsouthernfrance")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("No such topic");

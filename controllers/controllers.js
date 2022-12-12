@@ -24,8 +24,8 @@ exports.getTopics = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
   const { sort_by, order, topic, limit, p } = req.query;
   selectArticles(sort_by, order, topic, limit, p)
-    .then((result) => {
-      res.status(200).send({ articles: result, total_count: result.length });
+    .then(({ articles, count }) => {
+      res.status(200).send({ articles: articles, total_count: count });
     })
     .catch(next);
 };

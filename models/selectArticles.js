@@ -46,8 +46,11 @@ exports.selectArticles = (
   if (topic) {
     promiseArray.push(checkTopicExists(topic));
     topicValue.push(topic);
-    queryStr += ` WHERE articles.topic = $1`;
+    queryStr += " WHERE articles.topic = $1";
   }
+
+  const countQuery = `${queryStr} GROUP BY articles.article_id;`;
+  // promiseArray.push(db.query(countQuery, topicValue));
 
   queryStr += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order} LIMIT ${limit}`;
 
@@ -57,16 +60,33 @@ exports.selectArticles = (
       queryStr += ` OFFSET ${offset}`;
     }
   }
-
   queryStr += ";";
 
-  promiseArray.push(db.query(queryStr, topicValue));
+  // promiseArray.push(db.query(queryStr, topicValue));
 
+  // return db
+  //   .query(countQuery, topicValue)
+  //   .then((result) => {
+  //     return result.rows.length;
+  //   })
+  //   .then((count) => {
+  //     return Promise.all(promiseArray).then((result) => {
+  //       if (result[1] === undefined) {
+  //         // If no topic is passed
+  //         return { articles: result[0].rows, count: count };
+  //       } else {
+  //         return { articles: result[1].rows, count: count };
+  //       }
+  //     });
+  //   });
+
+  promiseArray.push(db.query(countQuery, topicValue));
+  promiseArray.push(db.query(queryStr, topicValue));
   return Promise.all(promiseArray).then((result) => {
-    if (result[1] === undefined) {
-      return result[0].rows;
+    if (result[2] === undefined) {
+      return { articles: result[1].rows, count: result[0].rows.length };
     } else {
-      return result[1].rows;
+      return { articles: result[2].rows, count: result[1].rows.length };
     }
   });
 };
